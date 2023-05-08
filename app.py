@@ -50,13 +50,30 @@ def add_guide():
 
 
 # Endpoint to query all guides
-
 @app.route("/guides", methods=["GET"])
 def get_guides():
     all_guides = Guide.query.all()
     result = guides_schema.dump(all_guides)
     return jsonify(result)
 
+#Endpoint for querying a single guide
+@app.route("/guide/<id>", methods=["GET"])
+def get_guide(id):
+    guide = Guide.query.get(id)
+    return guide_schema.jsonify(guide)
+
+#Endpoint for Update a guide 
+@app.route("/guide/<id>", methods=["PUT"])
+def get_update(id):
+    guide = Guide.query.get(id)
+    title = request.json['title']
+    content = request.json['content']
+
+    guide.title = title
+    guide.contente = content
+
+    db.session.commit()
+    return guide_schema.jsonify(guide)
 
 if __name__ == "__main__":
     app.run(debug=True)
